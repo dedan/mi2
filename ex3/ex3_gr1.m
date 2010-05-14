@@ -55,7 +55,7 @@ for i_sigma = 1:length(sigmas)
             
            h = h_range(i_h);
 
-           x = -h:(255+h);              % x value for the kernel function
+           x = -h-128:(255+h+128);      % x value for the kernel function
            f = zeros(length(x),1);      % probabilty density function
 
            % loop over points in the patch
@@ -72,6 +72,7 @@ for i_sigma = 1:length(sigmas)
            log_likelihood(i_h) = -sum(log(f).*hist_val_set);       % log likelihood
 
            plot(x,f);                               % plot the pdf
+           xlim([-h 255+h]) 
            labels{i_h} =sprintf('h=%d',h);      
 
         end
