@@ -1,11 +1,11 @@
 clear all
 clc
 
-im           = imread('testimg.jpg');       % load the image
-sigmas       = [0.05 0.1];                  % sigmas for gaussian noise
-sample_sizes = [100 500];                   % sample sizes
-min_log_like = zeros(length(sigmas),length(sample_sizes));      % matrix for min likelihood
-h_min_log_like = zeros(length(sigmas),length(sample_sizes));    % h associated with min likelihood
+im              = imread('testimg.jpg');       % load the image
+sigmas          = [0.05 0.1];                  % sigmas for gaussian noise
+sample_sizes    = [100 500];                   % sample sizes
+min_log_like    = zeros(length(sigmas),length(sample_sizes));       % matrix for min likelihood
+h_min_log_like  = zeros(length(sigmas),length(sample_sizes));       % h associated with min likelihood
 
 
 % iterate over sigmas
@@ -20,21 +20,17 @@ for i_sigma = 1:length(sigmas)
         % current sample size
         sample_size = sample_sizes(i_sample_size);
         
-        noise = randn(size(im)) * sigma * 255;     % generate noise
-        noisy_im = round(double(im)+noise);        % add noise to the image
-        noisy_im_vect = noisy_im(:);
+        noise           = randn(size(im)) * sigma * 255;    % generate noise
+        noisy_im        = round(double(im)+noise);          % add noise to the image
+        noisy_im_vect   = noisy_im(:);
 
-        perms = randperm(length(noisy_im_vect));   % compute a random permutation of the samples
-        sample_indexes = perms(1:sample_size);     % sample indexes 
-        val_indexes = perms(sample_size:end);      % validation indexes
-        sample_set = noisy_im_vect(sample_indexes);% sample set
-        val_set = noisy_im_vect(val_indexes);      % validation set
+        perms           = randperm(length(noisy_im_vect));      % compute a random permutation of the samples
+        sample_indexes  = perms(1:sample_size);                 % sample indexes 
+        val_indexes     = perms(sample_size:end);               % validation indexes
+        sample_set      = noisy_im_vect(sample_indexes);        % sample set
+        val_set         = noisy_im_vect(val_indexes);           % validation set
 
-        fig = figure();
-        fig_scale = 1;
-        fig_rel_h = 1;
-        set(fig,'Units','normalized','Position',[(1-fig_scale)/2, (1-fig_scale*fig_rel_h)/2,fig_scale,fig_scale*fig_rel_h])
-        set(fig,'PaperPositionMode','auto')
+        figure();
 
         % show noisy image
         subplot(2,2,1)
