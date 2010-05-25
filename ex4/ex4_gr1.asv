@@ -1,0 +1,43 @@
+
+clc
+close all
+clear all
+
+% load data
+load toypca/pca_data.dat
+
+% center data
+mu = mean(pca_data);
+cent_data(:,1) = pca_data(:,1) - mu(1);   
+cent_data(:,2) = pca_data(:,2) - mu(2);   
+
+% compute principal components
+[pcs, lambdas]  = eig(cov(cent_data)); 
+
+% transform data to pca space
+coeff = cent_data * pcs;
+
+figure
+
+% plot the datapoints
+subplot 121
+plot(pca_data(:,1), pca_data(:,2),'.k'); 
+title('original data')
+
+% datapoints in pc coordinate system
+subplot 122
+plot(coeff(:,1), coeff(:,2),'.k')
+title('PC coordinate system')
+
+% reconstruct data
+rec_data = size(pca_data);
+for i=1:size(pca_data,1)
+    rec_data(i,:) = coeff(i,:)*pcs + mu;
+    rec_data_v1(i,:) = coeff(i,0)*pcs
+end
+
+figure
+subplot 121
+plot(rec_data(:,1), rec_data(:,2),'.k'); 
+title('reconstructed data')
+

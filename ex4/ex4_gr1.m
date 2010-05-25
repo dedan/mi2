@@ -1,4 +1,11 @@
 
+clc
+close all
+clear all
+
+%% Exercise 5.1 - Toy Data
+
+% load data
 load toypca/pca_data.dat
 res = struct;
 
