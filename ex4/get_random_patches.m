@@ -21,8 +21,8 @@ function patches = get_random_patches(prefix,num_patches,patch_size)
         
             % extract the needed number of patches from this image
             for j = 1:patch_per_img
-                center_x = randint(1,1,width-patch_size)+hps;     % x center of the patch
-                center_y = randint(1,1,height-patch_size)+hps;    % y center of the patch
+                center_x = randi(1,1,width-patch_size)+hps;     % x center of the patch
+                center_y = randi(1,1,height-patch_size)+hps;    % y center of the patch
 	
                 patch = img(center_x-hps+1:center_x+hps, center_y-hps+1:center_y+hps);  % extract patch
                 patches(:,i) = reshape(patch,patch_size^2,1);                           % reshape and store the patch

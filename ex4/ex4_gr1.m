@@ -51,11 +51,34 @@ end
 
 %% Exercise 5.2 Image Data
 
-patch_size = 8;                                                         % patch size
-num_patches = 500;                                                     % number of patches to generate
-nat_patches = get_random_patches('n',num_patches,8);                    % extract patches 
-nat_patches = nat_patches - repmat(mean(nat_patches,2),1,num_patches);  % center data
+patch_size = 8;                                                 % patch size
+num_patches = 500;                                              % number of patches to generate
 
-% compute principal components
-[nat_pcs, nat_lambdas]  = eig(cov(nat_patches)); 
+nat_patches = get_random_patches('n',num_patches,8)';           % extract patches 
+b_patches   = get_random_patches('b',num_patches,8)';            
+
+% this time use princomp as centering is already build in
+nat_pcs     = princomp(nat_patches);
+b_pcs       = princomp(b_patches);
+
+figure(2)
+title('pcs of natural images');
+for i =1:20
+    subplot(5,5,i);
+    imagesc(reshape(nat_pcs(:,i),patch_size, patch_size));
+    colormap gray
+    axis off
+end
+
+figure(3)
+title('pcs of images of buildings');
+for i =1:20
+    subplot(5,5,i);
+    imagesc(reshape(b_pcs(:,i),patch_size, patch_size));
+    colormap gray
+    axis off
+end
+
+% the pcs of the images of buildings show more rectangular angle
+% orientation
 
