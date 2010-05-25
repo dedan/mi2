@@ -48,3 +48,14 @@ for i = 1:length(res)
     end
 end
 
+
+%% Exercise 5.2 Image Data
+
+patch_size = 8;                                                         % patch size
+num_patches = 500;                                                     % number of patches to generate
+nat_patches = get_random_patches('n',num_patches,8);                    % extract patches 
+nat_patches = nat_patches - repmat(mean(nat_patches,2),1,num_patches);  % center data
+
+% compute principal components
+[nat_pcs, nat_lambdas]  = eig(cov(nat_patches)); 
+
