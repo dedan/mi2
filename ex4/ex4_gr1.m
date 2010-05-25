@@ -1,4 +1,4 @@
-
+%comment
 
 load toypca/pca_data.dat
 
