@@ -1,4 +1,4 @@
-clc
+%clc
 close all
 clear all
 
@@ -117,3 +117,76 @@ annotation('textbox','String',{'PCS of buildings'},'Position',[0.4 0.99 0.5 0],'
 % the pcs of the images of buildings show more rectangular angle
 % orientation
 
+
+%% kernel pca
+
+
+toy_data    = [];
+n_data      = 30;                           % datapoints per cluster
+sig         = 0.1;                          % sigma of dataclusters
+means       = [-0.5 -0.2; 0 0.6; 0.5 0];    % means of clusters
+n_eig       = 16;                           % number of eigenvectors
+
+% create toy data
+for i = 1:size(means,1)
+   toy_data = [toy_data randn(2,n_data)*sig + repmat(means(i,:),n_data,1)']; %#ok<AGROW>
+end
+
+% compute kernel matrix
+p = length(toy_data);
+kernel_matrix = zeros(p);
+for i = 1:p
+    for j = 1:p
+        kernel_matrix(i,j) = exp(-norm(toy_data(:,i)-toy_data(:,j))^2/(2*sig^2));
+    end
+end
+
+% normalize kernel matrix
+j = ones(p);
+k = kernel_matrix - 1/p * j * kernel_matrix - 1/p * kernel_matrix * j + 1/p^2 * j * kernel_matrix * j;
+
+% compute the eigenvectors of k and sort them
+[a_tilde,lambdas]   = eig(k);
+[lambdas, idx]      = sort(diag(lambdas),'descend');
+a_tilde             = a_tilde(:,idx);
+
+% normalize the eigenvectors
+a = NaN(size(a_tilde));
+for i = 1:p
+    a(:,i) = a_tilde(:,i) / (sqrt(lambdas(i)*p)* norm(a_tilde(:,i)));
+end
+
+% creating result struct
+range = -1:0.1:1;
+res = struct;
+for eigk = 1:n_eig
+    res(eigk).bla = zeros(length(range));
+end
+
+% computing projections for each eigenvector
+for i = 1:length(range)
+    for j = 1:length(range)
+        x = [range(i); range(j)];
+        
+        % loop over all datapoints
+        for beta = 1:p
+            % loop over eigenvectors
+            for eigk = 1:n_eig
+                res(eigk).bla(i,j) = res(eigk).bla(i,j) + norm(a(beta,eigk)) * exp(-norm(toy_data(:,beta)-x)^2/(2*sig^2));
+            end
+        end
+    end
+end
+
+% plotting
+figure
+annotation('textbox','String',{'Kernel-PCS in input space'},'Position',[0.4 0.99 0.5 0],'LineStyle','none');
+
+[x y] = meshgrid(-1:0.1:1, -1:0.1:1);
+for i = 1:n_eig
+    subplot(4,4,i);
+    contour(x, y, res(i).bla)
+    hold on
+    plot(toy_data(1,:),toy_data(2,:), '.k')
+    hold off
+end
