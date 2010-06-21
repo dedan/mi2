@@ -20,7 +20,7 @@ res(3).s     = uniform;
 res(3).label = 'uniform';
 res(3).color = 'r';
 
-
+%% 1
 
 
 % pca spheering of data 
@@ -63,6 +63,12 @@ for i = 1:length(res)
 end
 
 
+% plots
+% Plot the original dataset (sources) and the mixed dataset after the 
+% steps 1, 2, 3, 4, and 6 as a scatter plot and display the respective marginal histograms. 
+% After step 5 plot the kurtosis value as a function of angle for each dimension.
+% Compare the histograms for ?min and ?max for the different distributions.
+% 1 mixing 2 centering 3 decorelation 4 spheering 6 min max kurt
 for i = 1:length(res)
 
     figure;
@@ -106,7 +112,7 @@ for i = 1:length(res)
     
     figure(50);
     
-    subplot(2,2,1);
+    subplot(4,1,1);
     hold on
     range = min(min_rot(1,:)):(max(min_rot(1,:))-min(min_rot))/n_bins:max(min_rot(1,:));
     bar(range, histc(min_rot(1,:),range), 'FaceColor', res(i).color);
@@ -114,7 +120,7 @@ for i = 1:length(res)
     legend({res.label});
     hold off
     
-    subplot(2,2,2);
+    subplot(4,1,2);
     hold on
     range = min(min_rot(2,:)):(max(min_rot(2,:))-min(min_rot))/n_bins:max(min_rot(2,:));
     bar(range, histc(min_rot(1,:),range), 'FaceColor', res(i).color);
@@ -122,7 +128,7 @@ for i = 1:length(res)
     legend({res.label});
     hold off
 
-    subplot(2,2,3);
+    subplot(4,1,3);
     hold on
     range = min(max_rot(1,:)):(max(max_rot(1,:))-min(max_rot))/n_bins:max(max_rot(1,:));
     bar(range, histc(max_rot(1,:),range), 'FaceColor', res(i).color);
@@ -130,7 +136,7 @@ for i = 1:length(res)
     legend({res.label});
     hold off
 
-    subplot(2,2,4);
+    subplot(4,1,4);
     hold on
     range = min(max_rot(2,:)):(max(max_rot(2,:))-min(max_rot))/n_bins:max(max_rot(2,:));
     bar(range, histc(max_rot(1,:),range), 'FaceColor', res(i).color);
@@ -141,10 +147,30 @@ for i = 1:length(res)
 end
 
 
+%% 2
 
-% plots
-% Plot the original dataset (sources) and the mixed dataset after the 
-% steps 1, 2, 3, 4, and 6 as a scatter plot and display the respective marginal histograms. 
-% After step 5 plot the kurtosis value as a function of angle for each dimension.
-% Compare the histograms for ?min and ?max for the different distributions.
-% 1 mixing 2 centering 3 decorelation 4 spheering 6 min max kurt
+t       = 0:0.05:50;
+s       = NaN(3,length(t));
+s(1,:)  = 4*sin(t-3);
+s(2,:)  = mod(t+5,10);
+s(3,:)  = -14 * cos(2*t);
+s(3,1)  = 0;
+
+A = [2 -3 -4; 7 5 1; -4 7 5];
+
+x = A*s;
+
+figure(1);
+subplot 211
+plot(s');
+subplot 212
+plot(x');
+
+figure(2);
+subplot 211
+whitesig = fastica(x, 'only', 'white');
+plot(whitesig');
+
+subplot 212
+sep = fastica(x);
+plot(sep');
