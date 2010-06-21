@@ -174,3 +174,20 @@ plot(whitesig');
 subplot 212
 sep = fastica(x);
 plot(sep');
+
+
+%% 3
+
+n_patches   = 2000;
+patch_size  = 4;
+n           = get_random_patches('n',n_patches,patch_size);
+
+[A W] = fastica(n, 'approach', 'symm', 'g', 'tanh');
+% figure;
+% for i = 1:20
+%     subplot(4,5,i);
+%     reshape(
+%     
+    
+    
+    
